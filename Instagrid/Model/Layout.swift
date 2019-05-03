@@ -7,7 +7,16 @@
 //
 
 import Foundation
+
 //
-enum Layout {
-    case layout1, layout2, layout3
+enum Layout: Int {
+    case layout1 = 1
+    case layout2
+    case layout3
+}
+
+struct LayoutDisposition {
+    
+    // Default disposition of the layout is set to 1
+    var selectedLayout: Layout = .layout1
 }

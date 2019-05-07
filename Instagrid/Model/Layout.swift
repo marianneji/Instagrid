@@ -8,23 +8,30 @@
 
 import Foundation
 
-//
+
+
 enum Layout: Int {
     case layout1 = 1
     case layout2
     case layout3
+    
+    var photosLayoutNumber: PhotosLayoutNumber {
+        switch self {
+        case .layout1:
+            return PhotosLayoutNumber(top: 1, bot: 2)
+        case .layout2:
+            return PhotosLayoutNumber(top: 2, bot: 1)
+        case .layout3:
+            return PhotosLayoutNumber(top: 2, bot: 2)
+        }
+    }
+    
 }
 
-struct LayoutDisposition {
+struct PhotosLayoutNumber {
     
-    // Default disposition of the layout is set to 1
-    var selectedLayout: Layout = .layout1
+    let top: Int
     
-    // Button selected for set an image
-    var currentButton = 0
-    
-    // Check if the selected disposition is avalaible
-    func dispositionIsAvalaible(_ selectedLayout: Layout) -> Bool {
-        return self.selectedLayout != selectedLayout
-    }
+    let bot: Int
 }
+

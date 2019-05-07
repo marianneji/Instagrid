@@ -11,19 +11,33 @@ import UIKit
 class ViewController: UIViewController {
     
     // Use to set "SelectedButton" image to the corresponding disposition
-    @IBOutlet private var selectedLayout: [UIImageView]!
+    @IBOutlet private var tappedOnSelectedLayoutImageViews: [UIImageView]!
     
     // Use to change the image "upArrow" to "leftArrow" when device is rotated
-    @IBOutlet private weak var swipeDirectionArrow: UIImageView!
+    @IBOutlet private weak var swipeDirectionArrowImageView: UIImageView!
     
     // Use to change the label "swipe up" to "swipe left" when device is rotated
     @IBOutlet private weak var swipeLabel: UILabel!
     
-    // should contain the image grid view
-    @IBOutlet weak var gridViewLayout: GridView!
+
+    @IBOutlet weak var topStackView: UIStackView!
     
-    // constant to access the layout dispositions
-    let gridView = LayoutDisposition()
+    @IBOutlet weak var bottomStackView: UIStackView!
+    
+    var selectedLayout: Layout?
+    
+    
+    fileprivate func displaySelectedOverlay(_ sender: UIButton) {
+        for selectedLayoutImageView in tappedOnSelectedLayoutImageViews {
+            selectedLayoutImageView.isHidden =
+                selectedLayoutImageView.tag == sender.tag ? false : true
+        }
+    }
+    
+    @IBAction func layoutButtonTapped(_ sender: UIButton) {
+        displaySelectedOverlay(sender)
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()

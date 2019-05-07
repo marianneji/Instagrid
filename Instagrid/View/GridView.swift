@@ -17,8 +17,8 @@ class GridView: UIView {
     // Contain the bottom stackView in the GridView
     @IBOutlet weak var bottomStackView: UIStackView!
     
-    // Contain all the dispositions of the layout buttons
-    @IBOutlet var layoutButtons: [UIButton]!
+    // Contain all the dispositions of the grid View buttons
+    @IBOutlet var plusButtons: [UIButton]!
     
     
 }

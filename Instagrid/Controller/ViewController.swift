@@ -19,23 +19,35 @@ class ViewController: UIViewController {
     // Use to change the label "swipe up" to "swipe left" when device is rotated
     @IBOutlet private weak var swipeLabel: UILabel!
     
-
-    @IBOutlet weak var topStackView: UIStackView!
-    
-    @IBOutlet weak var bottomStackView: UIStackView!
     
     var selectedLayout: Layout?
     
+    @IBOutlet weak var gridView: PhotosLayoutView!
     
     fileprivate func displaySelectedOverlay(_ sender: UIButton) {
         for selectedLayoutImageView in tappedOnSelectedLayoutImageViews {
-            selectedLayoutImageView.isHidden =
-                selectedLayoutImageView.tag == sender.tag ? false : true
+            selectedLayoutImageView.isHidden = selectedLayoutImageView.tag != sender.tag
+        }
+    }
+    
+    fileprivate func displaySelectedLayout(_ sender: UIButton) {
+        for _ in tappedOnSelectedLayoutImageViews.enumerated() {
+            switch sender.tag {
+            case 1:
+                gridView.setupLayout(Layout.layout1)
+            case 2:
+                gridView.setupLayout(Layout.layout2)
+            case 3:
+                gridView.setupLayout(Layout.layout3)
+            default:
+                break
+            }
         }
     }
     
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
         displaySelectedOverlay(sender)
+        displaySelectedLayout(sender)
     }
     
 

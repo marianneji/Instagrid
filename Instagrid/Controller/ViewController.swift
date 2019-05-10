@@ -58,5 +58,13 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    // Use to change label and arrow when device has been rotated
+    @objc func deviceHasBeenRotated() {
+        if UIDevice.current.orientation.isLandscape {
+            swipeLabel.text = "Swipe left to share"
+            swipeDirectionArrowImageView.image = UIImage(named: "Swipe left")
+        }
+    }
 }
 

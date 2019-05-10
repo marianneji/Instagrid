@@ -14,6 +14,7 @@
 		72138CE522661C080054D597 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 72138CE322661C080054D597 /* LaunchScreen.storyboard */; };
 		7225AD2F2269C24E00ABAA91 /* Delm-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7225AD2E2269C24E00ABAA91 /* Delm-Medium.otf */; };
 		7225AD312269C28100ABAA91 /* ThirstySoftRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7225AD302269C28100ABAA91 /* ThirstySoftRegular.otf */; };
+		725F1A462285AA980043A087 /* PhotosLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725F1A452285AA980043A087 /* PhotosLayoutView.swift */; };
 		72FF51DB2271F9300087291C /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FF51DA2271F92F0087291C /* Layout.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		72138CE622661C080054D597 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7225AD2E2269C24E00ABAA91 /* Delm-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Delm-Medium.otf"; sourceTree = "<group>"; };
 		7225AD302269C28100ABAA91 /* ThirstySoftRegular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThirstySoftRegular.otf; sourceTree = "<group>"; };
+		725F1A452285AA980043A087 /* PhotosLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosLayoutView.swift; sourceTree = "<group>"; };
 		72FF51DA2271F92F0087291C /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				72138CDE22661C060054D597 /* Main.storyboard */,
+				725F1A452285AA980043A087 /* PhotosLayoutView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -181,6 +184,7 @@
 				72138CDD22661C060054D597 /* ViewController.swift in Sources */,
 				72138CDB22661C060054D597 /* AppDelegate.swift in Sources */,
 				72FF51DB2271F9300087291C /* Layout.swift in Sources */,
+				725F1A462285AA980043A087 /* PhotosLayoutView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

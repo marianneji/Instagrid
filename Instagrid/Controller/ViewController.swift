@@ -24,12 +24,26 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var gridView: PhotosLayoutView!
     
+    
+    @IBAction func layoutButtonTapped(_ sender: UIButton) {
+        displaySelectedOverlay(sender)
+        displaySelectedLayout(sender)
+    }
+    
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+    }
+
+    // Use to show or hide the selected button on the selected layout
     fileprivate func displaySelectedOverlay(_ sender: UIButton) {
         for selectedLayoutImageView in tappedOnSelectedLayoutImageViews {
             selectedLayoutImageView.isHidden = selectedLayoutImageView.tag != sender.tag
         }
     }
     
+    // Use to set up the grid of the selected layout
     fileprivate func displaySelectedLayout(_ sender: UIButton) {
         for _ in tappedOnSelectedLayoutImageViews.enumerated() {
             switch sender.tag {
@@ -44,18 +58,5 @@ class ViewController: UIViewController {
             }
         }
     }
-    
-    @IBAction func layoutButtonTapped(_ sender: UIButton) {
-        displaySelectedOverlay(sender)
-        displaySelectedLayout(sender)
-    }
-    
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-    }
-
-
 }
 

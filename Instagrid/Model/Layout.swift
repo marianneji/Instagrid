@@ -37,8 +37,7 @@ class PhotosLayoutView: UIView {
         self.topRightView?.isHidden = layout.photosLayoutNumber.top == 1
         self.bottomLeftView?.isHidden = false
         self.bottomRightView?.isHidden = layout.photosLayoutNumber.bot == 1
-
+        
     }
-    
 }
 

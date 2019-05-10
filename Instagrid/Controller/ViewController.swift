@@ -30,7 +30,9 @@ class ViewController: UIViewController {
         displaySelectedLayout(sender)
     }
     
-
+    @IBAction func TappedOnImageButton(_ sender: UIButton) {
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -66,5 +68,14 @@ class ViewController: UIViewController {
             swipeDirectionArrowImageView.image = UIImage(named: "Swipe left")
         }
     }
+    /*func setImage() {
+        let image = UIImagePickerController()
+        
+        image.delegate = self
+        image.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        image.allowsEditing = false
+        
+        self.present(image, animated: true)
+    }*/
 }
 

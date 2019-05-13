@@ -385,11 +385,6 @@
                         <viewLayoutGuide key="safeArea" id="iuJ-Fp-9ip"/>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="Fdi-mc-Mf0"/>
-                                <exclude reference="Gpp-yJ-5CT"/>
-                                <exclude reference="X0W-Ki-Udl"/>
-                                <exclude reference="kdQ-p6-goF"/>
-                                <exclude reference="sUM-JL-M6S"/>
                                 <exclude reference="37F-DE-e35"/>
                                 <exclude reference="J8V-Yz-pxr"/>
                                 <exclude reference="Kca-xi-WPS"/>
@@ -400,6 +395,11 @@
                                 <exclude reference="eF7-41-3ql"/>
                                 <exclude reference="lmm-CC-toM"/>
                                 <exclude reference="qEr-gL-BfH"/>
+                                <exclude reference="Fdi-mc-Mf0"/>
+                                <exclude reference="Gpp-yJ-5CT"/>
+                                <exclude reference="X0W-Ki-Udl"/>
+                                <exclude reference="kdQ-p6-goF"/>
+                                <exclude reference="sUM-JL-M6S"/>
                                 <exclude reference="16P-cU-pqq"/>
                                 <exclude reference="BEU-Dj-QK8"/>
                                 <exclude reference="VrP-XN-oe0"/>
@@ -408,14 +408,6 @@
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
-                                <exclude reference="4Je-GZ-cMO"/>
-                                <include reference="Fdi-mc-Mf0"/>
-                                <include reference="Gpp-yJ-5CT"/>
-                                <exclude reference="KYW-vQ-4eY"/>
-                                <exclude reference="X0W-Ki-Udl"/>
-                                <exclude reference="eOX-51-yIN"/>
-                                <exclude reference="kdQ-p6-goF"/>
-                                <exclude reference="sUM-JL-M6S"/>
                                 <exclude reference="37F-DE-e35"/>
                                 <exclude reference="J8V-Yz-pxr"/>
                                 <exclude reference="Kca-xi-WPS"/>
@@ -427,6 +419,14 @@
                                 <exclude reference="eF7-41-3ql"/>
                                 <exclude reference="lmm-CC-toM"/>
                                 <include reference="qEr-gL-BfH"/>
+                                <exclude reference="4Je-GZ-cMO"/>
+                                <include reference="Fdi-mc-Mf0"/>
+                                <include reference="Gpp-yJ-5CT"/>
+                                <exclude reference="KYW-vQ-4eY"/>
+                                <exclude reference="X0W-Ki-Udl"/>
+                                <exclude reference="eOX-51-yIN"/>
+                                <exclude reference="kdQ-p6-goF"/>
+                                <exclude reference="sUM-JL-M6S"/>
                                 <include reference="16P-cU-pqq"/>
                                 <include reference="BEU-Dj-QK8"/>
                                 <exclude reference="Bbm-G0-RfU"/>
@@ -446,6 +446,10 @@
                         <outletCollection property="tappedOnSelectedLayoutImageViews" destination="eEA-Ma-kOJ" collectionClass="NSMutableArray" id="ZLl-Pe-OPv"/>
                         <outletCollection property="tappedOnSelectedLayoutImageViews" destination="PKL-iM-QGc" collectionClass="NSMutableArray" id="Gh4-Aq-rfR"/>
                         <outletCollection property="tappedOnSelectedLayoutImageViews" destination="vh8-Og-uST" collectionClass="NSMutableArray" id="bAh-qv-KuI"/>
+                        <outletCollection property="imagesArray" destination="c4X-I0-dWB" collectionClass="NSMutableArray" id="vMN-sC-qI5"/>
+                        <outletCollection property="imagesArray" destination="A0x-XC-4fK" collectionClass="NSMutableArray" id="Gli-jW-BTZ"/>
+                        <outletCollection property="imagesArray" destination="giv-Ig-rH8" collectionClass="NSMutableArray" id="JUy-ZN-kor"/>
+                        <outletCollection property="imagesArray" destination="yTw-ah-AXN" collectionClass="NSMutableArray" id="JC9-K1-qGz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

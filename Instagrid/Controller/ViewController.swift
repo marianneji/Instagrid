@@ -8,8 +8,9 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    @IBOutlet var imagesArrayImageView: [UIImageView]!
     // Use to set "SelectedButton" image to the corresponding disposition
     @IBOutlet private var tappedOnSelectedLayoutImageViews: [UIImageView]!
     
@@ -18,6 +19,9 @@ class ViewController: UIViewController {
     
     // Use to change the label "swipe up" to "swipe left" when device is rotated
     @IBOutlet private weak var swipeLabel: UILabel!
+    
+    
+    let imagePicker = UIImagePickerController()
     
     
     var selectedLayout: Layout?
@@ -31,11 +35,13 @@ class ViewController: UIViewController {
     }
     
     @IBAction func TappedOnImageButton(_ sender: UIButton) {
+        setImage()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        deviceHasBeenRotated()
     }
 
     // Use to show or hide the selected button on the selected layout
@@ -62,20 +68,35 @@ class ViewController: UIViewController {
     }
     
     // Use to change label and arrow when device has been rotated
-    @objc func deviceHasBeenRotated() {
+    func deviceHasBeenRotated() {
         if UIDevice.current.orientation.isLandscape {
             swipeLabel.text = "Swipe left to share"
-            swipeDirectionArrowImageView.image = UIImage(named: "Swipe left")
+            swipeDirectionArrowImageView.image = UIImage(named: "Swipe Left")
+        } else if UIDevice.current.orientation.isPortrait {
+            swipeLabel.text = "Swipe up to share"
+            swipeDirectionArrowImageView.image = UIImage(named: "Swipe Up")
         }
     }
-    /*func setImage() {
-        let image = UIImagePickerController()
+    
+    func setImage() {
+
+        imagePicker.delegate = self
+        imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
+        imagePicker.allowsEditing = false
         
-        image.delegate = self
-        image.sourceType = UIImagePickerControllerSourceType.photoLibrary
-        image.allowsEditing = false
+    }
+    
+    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let chosenImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImageView {
+            imagesArrayImageView.append(chosenImage)
+        }
+        self.dismiss(animated: true, completion: nil)
         
-        self.present(image, animated: true)
-    }*/
+    }
+    
 }
+
+    
+
+
 

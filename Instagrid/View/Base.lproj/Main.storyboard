@@ -51,7 +51,7 @@
                                                     <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="er8-G1-RYl" userLabel="View Top Left">
                                                         <rect key="frame" x="0.0" y="0.0" width="135.5" height="135.5"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="c4X-I0-dWB" userLabel="Top Left Image View">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="c4X-I0-dWB" userLabel="Top Left Image View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="135.5" height="135.5"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
@@ -84,7 +84,7 @@
                                                     <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="REA-D8-Kv4" userLabel="View Top Right">
                                                         <rect key="frame" x="143.5" y="0.0" width="135.5" height="135.5"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="A0x-XC-4fK" userLabel="Top right Image View">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="A0x-XC-4fK" userLabel="Top right Image View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="135.5" height="135.5"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
@@ -126,7 +126,7 @@
                                                     <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rNx-cg-8UL" userLabel="View Bottom Left">
                                                         <rect key="frame" x="0.0" y="0.0" width="135.5" height="135.5"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="giv-Ig-rH8" userLabel="Bottom Left Image View">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="giv-Ig-rH8" userLabel="Bottom Left Image View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="135.5" height="135.5"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="giv-Ig-rH8" secondAttribute="height" multiplier="1:1" id="H83-OG-8i6"/>
@@ -157,7 +157,7 @@
                                                     <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="76F-lH-WNY" userLabel="View Bottom Right">
                                                         <rect key="frame" x="143.5" y="0.0" width="135.5" height="135.5"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yTw-ah-AXN" userLabel="Bottom Right Image View">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yTw-ah-AXN" userLabel="Bottom Right Image View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="135.5" height="135.5"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="yTw-ah-AXN" secondAttribute="height" multiplier="1:1" id="lDh-Mz-dK7"/>
@@ -446,10 +446,10 @@
                         <outletCollection property="tappedOnSelectedLayoutImageViews" destination="eEA-Ma-kOJ" collectionClass="NSMutableArray" id="ZLl-Pe-OPv"/>
                         <outletCollection property="tappedOnSelectedLayoutImageViews" destination="PKL-iM-QGc" collectionClass="NSMutableArray" id="Gh4-Aq-rfR"/>
                         <outletCollection property="tappedOnSelectedLayoutImageViews" destination="vh8-Og-uST" collectionClass="NSMutableArray" id="bAh-qv-KuI"/>
-                        <outletCollection property="imagesArray" destination="c4X-I0-dWB" collectionClass="NSMutableArray" id="vMN-sC-qI5"/>
-                        <outletCollection property="imagesArray" destination="A0x-XC-4fK" collectionClass="NSMutableArray" id="Gli-jW-BTZ"/>
-                        <outletCollection property="imagesArray" destination="giv-Ig-rH8" collectionClass="NSMutableArray" id="JUy-ZN-kor"/>
-                        <outletCollection property="imagesArray" destination="yTw-ah-AXN" collectionClass="NSMutableArray" id="JC9-K1-qGz"/>
+                        <outletCollection property="imagesArrayImageView" destination="c4X-I0-dWB" collectionClass="NSMutableArray" id="Cv3-aH-kcN"/>
+                        <outletCollection property="imagesArrayImageView" destination="A0x-XC-4fK" collectionClass="NSMutableArray" id="EjG-wx-qiv"/>
+                        <outletCollection property="imagesArrayImageView" destination="giv-Ig-rH8" collectionClass="NSMutableArray" id="gUQ-hC-VpU"/>
+                        <outletCollection property="imagesArrayImageView" destination="yTw-ah-AXN" collectionClass="NSMutableArray" id="1sw-OQ-Zgw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

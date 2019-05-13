@@ -35,15 +35,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func TappedOnImageButton(_ sender: UIButton) {
-        setImage()
+        presentImagePicker()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         deviceHasBeenRotated()
     }
-
+    
     // Use to show or hide the selected button on the selected layout
     fileprivate func displaySelectedOverlay(_ sender: UIButton) {
         for selectedLayoutImageView in tappedOnSelectedLayoutImageViews {
@@ -78,25 +82,36 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    func setImage() {
-
+    func presentImagePicker() {
+        
         imagePicker.delegate = self
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         imagePicker.allowsEditing = false
+        self.present(imagePicker, animated: true)
         
     }
     
-    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let chosenImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImageView {
-            imagesArrayImageView.append(chosenImage)
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        //        guard let photoIndexToModify = currentPhotoIndexToModify else {return}
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            imagesArrayImageView[0].image = image
+            
         }
-        self.dismiss(animated: true, completion: nil)
-        
+        dismiss(animated: true, completion: nil)
     }
-    
 }
 
-    
+
+
+
+
+
+
+
+
+
+
+
 
 
 

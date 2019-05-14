@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet var imagesArrayImageView: [UIImageView]!
+    
     // Use to set "SelectedButton" image to the corresponding disposition
     @IBOutlet private var tappedOnSelectedLayoutImageViews: [UIImageView]!
     
@@ -22,6 +23,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     
     let imagePicker = UIImagePickerController()
+    var index = 0
     
     
     var selectedLayout: Layout?
@@ -34,8 +36,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         displaySelectedLayout(sender)
     }
     
-    @IBAction func TappedOnImageButton(_ sender: UIButton) {
-        presentImagePicker()
+    @IBAction func tappedOnImageButton(_ sender: UIButton) {
+        
+        displayImagesInTheRightView(sender)
+        
     }
     
     override func viewDidLoad() {
@@ -43,10 +47,33 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Do any additional setup after loading the view.
         
     }
+    fileprivate func displayImagesInTheRightView(_ sender: UIButton) {
+        
+        for _ in imagesArrayImageView {
+            switch sender.tag {
+            case 0:
+                presentImagePicker(at: 0)
+                
+            case 1:
+                presentImagePicker(at: 1)
+                
+            case 2:
+                presentImagePicker(at: 2)
+                
+            case 3:
+                presentImagePicker(at: 3)
+                
+            default:
+                break
+            }
+        }
+    }
+
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        deviceHasBeenRotated()
+        swipeDevice()
     }
+    
     
     // Use to show or hide the selected button on the selected layout
     fileprivate func displaySelectedOverlay(_ sender: UIButton) {
@@ -72,7 +99,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     // Use to change label and arrow when device has been rotated
-    func deviceHasBeenRotated() {
+    func swipeDevice() {
         if UIDevice.current.orientation.isLandscape {
             swipeLabel.text = "Swipe left to share"
             swipeDirectionArrowImageView.image = UIImage(named: "Swipe Left")
@@ -82,7 +109,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    func presentImagePicker() {
+    func presentImagePicker(at index: Int) {
         
         imagePicker.delegate = self
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
@@ -92,9 +119,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
         //        guard let photoIndexToModify = currentPhotoIndexToModify else {return}
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            imagesArrayImageView[0].image = image
+            imagesArrayImageView[index].image = image
+            index += 1
             
         }
         dismiss(animated: true, completion: nil)

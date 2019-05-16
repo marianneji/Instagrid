@@ -10,6 +10,9 @@ import UIKit
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    //Use to hide the button on the image
+    @IBOutlet var imagesButtons: [UIButton]!
+    
     @IBOutlet var imagesArrayImageView: [UIImageView]!
     
     // Use to set "SelectedButton" image to the corresponding disposition
@@ -26,6 +29,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var index = 0
     
     
+    
     var selectedLayout: Layout?
     
     @IBOutlet weak var gridView: PhotosLayoutView!
@@ -36,38 +40,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         displaySelectedLayout(sender)
     }
     
+//    fileprivate func hideButtonsOnImages(at index: Int) {
+//        for buttons in imagesButtons {
+//            buttons.isHidden = true
+//        }
+//    }
+//
     @IBAction func tappedOnImageButton(_ sender: UIButton) {
+        presentImagePicker(at: sender.tag)
         
-        displayImagesInTheRightView(sender)
-        
+
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        imagePicker.delegate = self
         
     }
-    fileprivate func displayImagesInTheRightView(_ sender: UIButton) {
-        
-        for _ in imagesArrayImageView {
-            switch sender.tag {
-            case 0:
-                presentImagePicker(at: 0)
-                
-            case 1:
-                presentImagePicker(at: 1)
-                
-            case 2:
-                presentImagePicker(at: 2)
-                
-            case 3:
-                presentImagePicker(at: 3)
-                
-            default:
-                break
-            }
-        }
-    }
+
 
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -109,9 +100,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    func presentImagePicker(at index: Int) {
-        
-        imagePicker.delegate = self
+    func presentImagePicker(at tag: Int) {
+        self.index = tag
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         imagePicker.allowsEditing = false
         self.present(imagePicker, animated: true)
@@ -123,8 +113,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         //        guard let photoIndexToModify = currentPhotoIndexToModify else {return}
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imagesArrayImageView[index].image = image
-            index += 1
             
+          
         }
         dismiss(animated: true, completion: nil)
     }

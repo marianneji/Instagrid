@@ -40,16 +40,26 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         displaySelectedLayout(sender)
     }
     
-//    fileprivate func hideButtonsOnImages(at index: Int) {
-//        for buttons in imagesButtons {
-//            buttons.isHidden = true
-//        }
-//    }
-//
+    fileprivate func hideButtonsOnImages(_ sender: UIButton) {
+        let button = imagesButtons[index]
+            button.isHidden = true
+        
+    }
+    fileprivate func showButtonsOnImages(_ sender: UIButton) {
+        let button = imagesButtons[index]
+        button.isHidden = false
+        
+    }
+    
     @IBAction func tappedOnImageButton(_ sender: UIButton) {
         presentImagePicker(at: sender.tag)
+        hideButtonsOnImages(sender)
         
-
+        
+    }
+    // use to empty the layout
+    func resetLayout() {
+        
     }
     
     override func viewDidLoad() {
@@ -58,8 +68,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.delegate = self
         
     }
-
-
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         swipeDevice()
@@ -101,20 +109,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func presentImagePicker(at tag: Int) {
+        
         self.index = tag
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         imagePicker.allowsEditing = false
         self.present(imagePicker, animated: true)
         
+        
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        //        guard let photoIndexToModify = currentPhotoIndexToModify else {return}
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imagesArrayImageView[index].image = image
             
-          
         }
         dismiss(animated: true, completion: nil)
     }

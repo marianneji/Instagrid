@@ -40,9 +40,27 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         displaySelectedLayout(sender)
     }
     
+    @IBAction func swipeToShare(_ sender: UIPanGestureRecognizer) {
+        switch sender.state {
+        case .ended :
+            shareImage()
+            resetLayout()
+        default:
+            break
+        }
+    }
+    
+    private func shareImage() {
+        let activityViewController = UIActivityViewController(activityItems: [imagesArrayImageView], applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+                // present the view controller
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+    
+    
     fileprivate func hideButtonsOnImages(_ sender: UIButton) {
         let button = imagesButtons[index]
-            button.isHidden = true
+        button.isHidden = true
         
     }
     fileprivate func showButtonsOnImages(_ sender: UIButton) {
@@ -59,6 +77,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     // use to empty the layout
     func resetLayout() {
+        imagesArrayImageView.removeAll()
         
     }
     
@@ -66,7 +85,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         imagePicker.delegate = self
-        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -114,18 +132,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         imagePicker.allowsEditing = false
         self.present(imagePicker, animated: true)
-        
-        
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imagesArrayImageView[index].image = image
-            
         }
         dismiss(animated: true, completion: nil)
     }
+    
+//    func requestAuthorization(_ handler: @escaping (PHPhotoLibrary.PHAuthorizationStatus)) {
+//
+//    }
+//
 }
 
 

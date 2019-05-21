@@ -47,9 +47,9 @@
 		<string>ThirstySoftRegular.otf</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>We need to have access to your camera</string>
+	<string>$(PRODUCT_NAME) We need to have access to your camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need to have access to your photo library </string>
+	<string>$(PRODUCT_NAME) We need to have access to your photo library </string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Do you want to upload your layout in your library?</string>
 </dict>

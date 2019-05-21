@@ -177,6 +177,7 @@
                                     </stackView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.062745098040000002" green="0.40000000000000002" blue="0.59607843140000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="8MZ-dw-6ed" secondAttribute="bottom" constant="8" id="0OK-bp-YZC"/>
                                     <constraint firstItem="8MZ-dw-6ed" firstAttribute="centerY" secondItem="7k4-R5-fLw" secondAttribute="centerY" id="Ns1-tM-PNw"/>
@@ -191,6 +192,7 @@
                                     <outlet property="bottomRightView" destination="76F-lH-WNY" id="IxG-yU-tQn"/>
                                     <outlet property="topLeftView" destination="er8-G1-RYl" id="iq6-M3-DN7"/>
                                     <outlet property="topRightView" destination="REA-D8-Kv4" id="kL8-YS-6Aj"/>
+                                    <outletCollection property="gestureRecognizers" destination="Q25-Zs-1mh" appends="YES" id="ppD-7B-7GO"/>
                                 </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="f6b-rb-6kI" userLabel="Swipe Stack View">
@@ -368,11 +370,6 @@
                         <viewLayoutGuide key="safeArea" id="iuJ-Fp-9ip"/>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="Fdi-mc-Mf0"/>
-                                <exclude reference="Gpp-yJ-5CT"/>
-                                <exclude reference="X0W-Ki-Udl"/>
-                                <exclude reference="kdQ-p6-goF"/>
-                                <exclude reference="sUM-JL-M6S"/>
                                 <exclude reference="37F-DE-e35"/>
                                 <exclude reference="J8V-Yz-pxr"/>
                                 <exclude reference="Kca-xi-WPS"/>
@@ -383,6 +380,11 @@
                                 <exclude reference="eF7-41-3ql"/>
                                 <exclude reference="lmm-CC-toM"/>
                                 <exclude reference="qEr-gL-BfH"/>
+                                <exclude reference="Fdi-mc-Mf0"/>
+                                <exclude reference="Gpp-yJ-5CT"/>
+                                <exclude reference="X0W-Ki-Udl"/>
+                                <exclude reference="kdQ-p6-goF"/>
+                                <exclude reference="sUM-JL-M6S"/>
                                 <exclude reference="16P-cU-pqq"/>
                                 <exclude reference="BEU-Dj-QK8"/>
                                 <exclude reference="VrP-XN-oe0"/>
@@ -391,14 +393,6 @@
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
-                                <exclude reference="4Je-GZ-cMO"/>
-                                <include reference="Fdi-mc-Mf0"/>
-                                <include reference="Gpp-yJ-5CT"/>
-                                <exclude reference="KYW-vQ-4eY"/>
-                                <exclude reference="X0W-Ki-Udl"/>
-                                <exclude reference="eOX-51-yIN"/>
-                                <exclude reference="kdQ-p6-goF"/>
-                                <exclude reference="sUM-JL-M6S"/>
                                 <exclude reference="37F-DE-e35"/>
                                 <exclude reference="J8V-Yz-pxr"/>
                                 <exclude reference="Kca-xi-WPS"/>
@@ -410,6 +404,14 @@
                                 <exclude reference="eF7-41-3ql"/>
                                 <exclude reference="lmm-CC-toM"/>
                                 <include reference="qEr-gL-BfH"/>
+                                <exclude reference="4Je-GZ-cMO"/>
+                                <include reference="Fdi-mc-Mf0"/>
+                                <include reference="Gpp-yJ-5CT"/>
+                                <exclude reference="KYW-vQ-4eY"/>
+                                <exclude reference="X0W-Ki-Udl"/>
+                                <exclude reference="eOX-51-yIN"/>
+                                <exclude reference="kdQ-p6-goF"/>
+                                <exclude reference="sUM-JL-M6S"/>
                                 <include reference="16P-cU-pqq"/>
                                 <include reference="BEU-Dj-QK8"/>
                                 <exclude reference="Bbm-G0-RfU"/>
@@ -440,6 +442,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="Q25-Zs-1mh">
+                    <connections>
+                        <action selector="swipeToShare:" destination="BYZ-38-t0r" id="cuv-ON-U6r"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="131.25" y="105"/>
         </scene>

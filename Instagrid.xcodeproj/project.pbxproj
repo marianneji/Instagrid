@@ -15,6 +15,7 @@
 		7225AD2F2269C24E00ABAA91 /* Delm-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7225AD2E2269C24E00ABAA91 /* Delm-Medium.otf */; };
 		7225AD312269C28100ABAA91 /* ThirstySoftRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7225AD302269C28100ABAA91 /* ThirstySoftRegular.otf */; };
 		725F1A462285AA980043A087 /* PhotosLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725F1A452285AA980043A087 /* PhotosLayoutView.swift */; };
+		726F63112293569E00CC4516 /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726F63102293569E00CC4516 /* PhotoLibrary.swift */; };
 		72FF51DB2271F9300087291C /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FF51DA2271F92F0087291C /* Layout.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		7225AD2E2269C24E00ABAA91 /* Delm-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Delm-Medium.otf"; sourceTree = "<group>"; };
 		7225AD302269C28100ABAA91 /* ThirstySoftRegular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThirstySoftRegular.otf; sourceTree = "<group>"; };
 		725F1A452285AA980043A087 /* PhotosLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosLayoutView.swift; sourceTree = "<group>"; };
+		726F63102293569E00CC4516 /* PhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
 		72FF51DA2271F92F0087291C /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				72FF51DA2271F92F0087291C /* Layout.swift */,
+				726F63102293569E00CC4516 /* PhotoLibrary.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -183,6 +186,7 @@
 			files = (
 				72138CDD22661C060054D597 /* ViewController.swift in Sources */,
 				72138CDB22661C060054D597 /* AppDelegate.swift in Sources */,
+				726F63112293569E00CC4516 /* PhotoLibrary.swift in Sources */,
 				72FF51DB2271F9300087291C /* Layout.swift in Sources */,
 				725F1A462285AA980043A087 /* PhotosLayoutView.swift in Sources */,
 			);

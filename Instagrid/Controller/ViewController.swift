@@ -53,14 +53,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case .ended :
 //            UIView.animate(withDuration: 0.3, animations: <#T##() -> Void#>)
             shareImage()
-            resetLayout()
+            
         default:
             break
         }
     }
     
     private func shareImage() {
-        let activityViewController = UIActivityViewController(activityItems: pictureToSend, applicationActivities: nil)
+        let image = createImageWithPictureView(pictureView: gridView)
+        let activityViewController = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
                 // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
@@ -80,7 +81,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func tappedOnImageButton(_ sender: UIButton) {
-        presentImagePicker(at: sender.tag)
+
+        chooseSourceTypeForPicture(at: sender.tag)
         hideButtonsOnImages(sender)
         
         
@@ -138,29 +140,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func chooseSourceTypeForPicture (at tag: Int) {
+
         self.index = tag
-        
         let actionSheet = UIAlertController(title: "Photo Source", message: "Choose a source", preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
             self.presentImageFromCamera(at: tag)
         }))
-        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
             self.presentImagePicker(at: tag)
         }))
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
+        self.present((actionSheet), animated: true, completion: nil)
     }
     
     func presentImageFromCamera(at tag: Int) {
         self.index = tag
         imagePicker.sourceType = UIImagePickerController.SourceType.camera
-        imagePicker.allowsEditing = false
+        imagePicker.allowsEditing = true
         self.present(imagePicker, animated: true)
     }
     
     func presentImagePicker(at tag: Int) {
         self.index = tag
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
-        imagePicker.allowsEditing = false
+        imagePicker.allowsEditing = true
         self.present(imagePicker, animated: true)
     }
     
@@ -168,7 +172,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imagesArrayImageView[index].image = image
         }
-        dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true, completion: nil)
+    }
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    func createImageWithPictureView(pictureView: PhotosLayoutView) -> UIImage? {
+        // Creates a bitmap-based graphics context and makes it the current context.
+        UIGraphicsBeginImageContext(pictureView.frame.size)
+        // Renders the layer and its sublayers into the specified context.
+        pictureView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        // Returns an image based on the contents of the current bitmap-based graphics context.
+        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
+        
+        return image
     }
 }
 

@@ -13,7 +13,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //Use to hide the button on the image
     @IBOutlet var imagesButtons: [UIButton]!
     
-    @IBOutlet weak var gridViewToSend: UIView!
     @IBOutlet var imagesArrayImageView: [UIImageView]!
     
     // Use to set "SelectedButton" image to the corresponding disposition
@@ -24,7 +23,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // Use to change the label "swipe up" to "swipe left" when device is rotated
     @IBOutlet private weak var swipeLabel: UILabel!
-    
     
     let imagePicker = UIImagePickerController()
     var index = 0
@@ -39,32 +37,49 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBOutlet weak var gridView: PhotosLayoutView!
     
-    
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
         displaySelectedOverlay(sender)
         displaySelectedLayout(sender)
     }
     
     @IBAction func swipeToShare(_ sender: UIPanGestureRecognizer) {
-//        let screenWidth = UIScreen.main.bounds.width
-//        var translationTransform: CGAffineTransform
-
+        //        let screenWidth = UIScreen.main.bounds.width
+        //        var translationTransform: CGAffineTransform
+        
         switch sender.state {
-        case .ended :
-//            UIView.animate(withDuration: 0.3, animations: <#T##() -> Void#>)
-            shareImage()
-            
+        case .began, .changed:
+            transformGridViewWith(gesture: sender)
+        case .ended, .cancelled :
+            if imagesArrayImageView.count < 3 {
+                let photosMissingAlert = UIAlertController(title: "Missing Pictures", message: "Add photos before sharing", preferredStyle: .alert)
+                photosMissingAlert.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
+                present(photosMissingAlert, animated: true)
+                gridView.transform = .identity
+                return
+                
+                
+            } else {
+                shareImage()
+                resetLayout()
+            }
         default:
             break
         }
     }
     
+    private func transformGridViewWith(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: gridView)
+        gridView.transform = CGAffineTransform(translationX: translation.x, y: translation.y)
+    }
+    
     private func shareImage() {
-        let image = createImageWithPictureView(pictureView: gridView)
+        let image = createImageOfGridView(gridView: gridView)
         let activityViewController = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-                // present the view controller
+        // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
+        
+        gridView.transform = .identity
     }
     
     
@@ -74,30 +89,26 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         
     }
-    fileprivate func showButtonsOnImages(_ sender: UIButton) {
-        let button = imagesButtons[index]
-        button.isHidden = false
-        
+    fileprivate func showButtonsOnImages() {
+        for button in imagesButtons {
+            button.alpha = 1
+        }
     }
     
     @IBAction func tappedOnImageButton(_ sender: UIButton) {
-
         chooseSourceTypeForPicture(at: sender.tag)
         hideButtonsOnImages(sender)
-        
-        
     }
+    
     // use to empty the layout
     func resetLayout() {
-        imagesArrayImageView.removeAll()
-        
+        showButtonsOnImages()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         imagePicker.delegate = self
-    
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -140,18 +151,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func chooseSourceTypeForPicture (at tag: Int) {
-
+        
         self.index = tag
-        let actionSheet = UIAlertController(title: "Photo Source", message: "Choose a source", preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
+        let actionPopUp = UIAlertController(title: "Photo Source", message: "Choose between", preferredStyle: .actionSheet)
+        actionPopUp.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
             self.presentImageFromCamera(at: tag)
         }))
-        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
+        actionPopUp.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
             self.presentImagePicker(at: tag)
         }))
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actionPopUp.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
-        self.present((actionSheet), animated: true, completion: nil)
+        self.present((actionPopUp), animated: true, completion: nil)
     }
     
     func presentImageFromCamera(at tag: Int) {
@@ -177,29 +188,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
-    func createImageWithPictureView(pictureView: PhotosLayoutView) -> UIImage? {
+    func createImageOfGridView(gridView: PhotosLayoutView) -> UIImage? {
         // Creates a bitmap-based graphics context and makes it the current context.
-        UIGraphicsBeginImageContext(pictureView.frame.size)
+        UIGraphicsBeginImageContext(gridView.frame.size)
         // Renders the layer and its sublayers into the specified context.
-        pictureView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        gridView.layer.render(in: UIGraphicsGetCurrentContext()!)
         // Returns an image based on the contents of the current bitmap-based graphics context.
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
         
         return image
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -27,17 +27,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     let imagePicker = UIImagePickerController()
     var index = 0
-    //    var pictureToSend: [UIImage] {
-    //        // use to transform object
-    //        get {
-    //        return self.imagesArrayImageView.compactMap { $0.image }
-    //
-    //        } set {
-    //            return
-    //        }
-    //    }
-    var selectedLayout: Layout?
-    
+   
     @IBOutlet weak var gridView: PhotosLayoutView!
     
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
@@ -110,7 +100,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         imagePicker.delegate = self
     }
     

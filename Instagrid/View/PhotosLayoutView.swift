@@ -22,4 +22,24 @@ class PhotosLayoutView: UIView {
         self.bottomRightView?.isHidden = layout.photosLayoutNumber.bot == 1
         
     }
+//    
+//   func checkIfLayout(layout: Layout) -> Bool {
+//        switch layout {
+//        case .layout1:
+//            if topLeftView == nil || bottomLeftView == nil || bottomRightView == nil {
+//                return false
+//            }
+//        case .layout2:
+//            if topLeftView == nil || bottomLeftView == nil || topRightView == nil {
+//                return false
+//            }
+//        case .layout3:
+//            if topLeftView == nil || bottomLeftView == nil || topRightView == nil || bottomRightView == nil {
+//                return false
+//            }
+//        }
+//        
+//        return true
+//    }
+    
 }

@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    //MARK: Outlets
     //Use to hide the button on the image
     @IBOutlet var imagesButtons: [UIButton]!
     
@@ -25,42 +26,78 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // Use to change the label "swipe up" to "swipe left" when device is rotated
     @IBOutlet private weak var swipeLabel: UILabel!
     
-    let imagePicker = UIImagePickerController()
-    var index = 0
-   
+    
     @IBOutlet weak var gridView: PhotosLayoutView!
     
+    //MARK: Variables
+    let imagePicker = UIImagePickerController()
+    var index = 0
+    
+    //MARK: ViewDidLoad
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        imagePicker.delegate = self
+        swipeGesture()
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        swipeDevice()
+    }
+    
+    //MARK: Actions
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
         displaySelectedOverlay(sender)
         displaySelectedLayout(sender)
     }
     
-    fileprivate func photosMissingAlert() {
-        let photosMissingAlert = UIAlertController(title: "Missing Pictures", message: "Add photos before sharing", preferredStyle: .alert)
-        photosMissingAlert.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
-        present(photosMissingAlert, animated: true)
-        gridView.transform = .identity
-        return
+    @IBAction func tappedOnImageButton(_ sender: UIButton) {
+        chooseSourceTypeForPicture(at: sender.tag)
+        hideButtonsOnImages(sender)
     }
     
-    @IBAction func swipeToShare(_ sender: UIPanGestureRecognizer) {
-        switch sender.state {
-        case .began, .changed:
-            transformGridViewWith(gesture: sender)
-        case .ended, .cancelled :
-            if index < 3 {
-                return photosMissingAlert()
-            } else {
-                shareImage()
-            }
-        default:
-            break
+    //Mark: Swipe
+    fileprivate func swipeGesture() {
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(HandleOrientationToShare(_:)))
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(HandleOrientationToShare(_:)))
+        swipeLeft.direction = .left
+        swipeUp.direction = .up
+        gridView.addGestureRecognizer(swipeLeft)
+        gridView.addGestureRecognizer(swipeUp)
+    }
+    
+    @objc fileprivate func HandleOrientationToShare(_ sender: UISwipeGestureRecognizer) {
+//        let screenWidth = UIScreen.main.bounds.width
+//        let screenHeight = UIScreen.main.bounds.height
+        if UIDevice.current.orientation.isLandscape {
+            sender.direction = .left
+            swipeAnimation(translationX: -view.frame.height, y: 0)
+        } else {
+            sender.direction = .up
+            swipeAnimation(translationX: 0, y: -view.frame.width)
+        }
+        shareImage()
+    }
+    
+    fileprivate func checkLayoutIsFilled() {
+        //        if gridView.checkIfLayout(layout: .layout1) {
+        //            photosMissingAlert()
+        //        } else if gridView.checkIfLayout(layout: .layout2) {
+        //            photosMissingAlert()
+        //        } else if gridView.checkIfLayout(layout: .layout3) {
+        //            photosMissingAlert()
+        if index < 3 {
+            photosMissingAlert()
+        } else {
+            shareImage()
         }
     }
     
-    private func transformGridViewWith(gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: gridView)
-        gridView.transform = CGAffineTransform(translationX: translation.x, y: translation.y)
+    private func swipeAnimation(translationX x: CGFloat, y: CGFloat) {
+        UIView.animate(withDuration: 0.7, animations: {
+            self.gridView.transform = CGAffineTransform(translationX: x, y: y)
+        })
     }
     
     private func shareImage() {
@@ -69,6 +106,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
+        
         resetLayout()
     }
     
@@ -79,7 +117,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             image.image = nil
         }
         gridView.transform = .identity
-        //        index = 0
+        index = 0
     }
     
     fileprivate func hideButtonsOnImages(_ sender: UIButton) {
@@ -93,27 +131,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    @IBAction func tappedOnImageButton(_ sender: UIButton) {
-        chooseSourceTypeForPicture(at: sender.tag)
-        hideButtonsOnImages(sender)
+    fileprivate func photosMissingAlert() {
+        let photosMissingAlert = UIAlertController(title: "Missing Pictures", message: "Add photos before sharing", preferredStyle: .alert)
+        photosMissingAlert.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
+        present(photosMissingAlert, animated: true)
+        gridView.transform = .identity
+        return
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        imagePicker.delegate = self
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        swipeDevice()
-    }
-    
     // Use to show or hide the selected button on the selected layout
     fileprivate func displaySelectedOverlay(_ sender: UIButton) {
         for selectedLayoutImageView in tappedOnSelectedLayoutImageViews {
             selectedLayoutImageView.isHidden = selectedLayoutImageView.tag != sender.tag
         }
     }
-    
     // Use to set up the grid of the selected layout
     fileprivate func displaySelectedLayout(_ sender: UIButton) {
         for _ in tappedOnSelectedLayoutImageViews.enumerated() {
@@ -140,7 +170,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             swipeDirectionArrowImageView.image = UIImage(named: "Swipe Up")
         }
     }
-    
+    // Use to choose between camera or Photo libray with a popup alert
     func chooseSourceTypeForPicture (at tag: Int) {
         self.index = tag
         let actionPopUpAlert = UIAlertController(title: "Photo Source", message: "Choose between", preferredStyle: .actionSheet)
@@ -153,14 +183,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         actionPopUpAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present((actionPopUpAlert), animated: true, completion: nil)
     }
-    
+    // call the camera
     func presentImageFromCamera(at tag: Int) {
         self.index = tag
         imagePicker.sourceType = UIImagePickerController.SourceType.camera
         imagePicker.allowsEditing = true
         self.present(imagePicker, animated: true)
     }
-    
+    // call the photo library
     func presentImagePicker(at tag: Int) {
         self.index = tag
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary

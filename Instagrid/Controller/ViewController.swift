@@ -13,6 +13,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //Use to hide the button on the image
     @IBOutlet var imagesButtons: [UIButton]!
     
+    //Use to store pictures in an array
     @IBOutlet var imagesArrayImageView: [UIImageView]!
     
     // Use to set "SelectedButton" image to the corresponding disposition
@@ -26,13 +27,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     let imagePicker = UIImagePickerController()
     var index = 0
-    var pictureToSend: [UIImage] {
-        // use to transform object
-        return self.imagesArrayImageView.compactMap { $0.image }
-    }
-    
-    
-    
+    //    var pictureToSend: [UIImage] {
+    //        // use to transform object
+    //        get {
+    //        return self.imagesArrayImageView.compactMap { $0.image }
+    //
+    //        } set {
+    //            return
+    //        }
+    //    }
     var selectedLayout: Layout?
     
     @IBOutlet weak var gridView: PhotosLayoutView!
@@ -42,25 +45,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         displaySelectedLayout(sender)
     }
     
+    fileprivate func photosMissingAlert() {
+        let photosMissingAlert = UIAlertController(title: "Missing Pictures", message: "Add photos before sharing", preferredStyle: .alert)
+        photosMissingAlert.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
+        present(photosMissingAlert, animated: true)
+        gridView.transform = .identity
+        return
+    }
+    
     @IBAction func swipeToShare(_ sender: UIPanGestureRecognizer) {
-        //        let screenWidth = UIScreen.main.bounds.width
-        //        var translationTransform: CGAffineTransform
-        
         switch sender.state {
         case .began, .changed:
             transformGridViewWith(gesture: sender)
         case .ended, .cancelled :
-            if imagesArrayImageView.count < 3 {
-                let photosMissingAlert = UIAlertController(title: "Missing Pictures", message: "Add photos before sharing", preferredStyle: .alert)
-                photosMissingAlert.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
-                present(photosMissingAlert, animated: true)
-                gridView.transform = .identity
-                return
-                
-                
+            if index < 3 {
+                return photosMissingAlert()
             } else {
                 shareImage()
-                resetLayout()
             }
         default:
             break
@@ -78,17 +79,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
-        
-        gridView.transform = .identity
+        resetLayout()
     }
     
+    // use to empty the layout
+    func resetLayout() {
+        showButtonsOnImages()
+        for image in imagesArrayImageView {
+            image.image = nil
+        }
+        gridView.transform = .identity
+        //        index = 0
+    }
     
     fileprivate func hideButtonsOnImages(_ sender: UIButton) {
         let button = imagesButtons[index]
         button.alpha = 0.1
-        
-        
     }
+    
     fileprivate func showButtonsOnImages() {
         for button in imagesButtons {
             button.alpha = 1
@@ -100,11 +108,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         hideButtonsOnImages(sender)
     }
     
-    // use to empty the layout
-    func resetLayout() {
-        showButtonsOnImages()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -114,7 +117,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         swipeDevice()
     }
-    
     
     // Use to show or hide the selected button on the selected layout
     fileprivate func displaySelectedOverlay(_ sender: UIButton) {
@@ -151,18 +153,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func chooseSourceTypeForPicture (at tag: Int) {
-        
         self.index = tag
-        let actionPopUp = UIAlertController(title: "Photo Source", message: "Choose between", preferredStyle: .actionSheet)
-        actionPopUp.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
+        let actionPopUpAlert = UIAlertController(title: "Photo Source", message: "Choose between", preferredStyle: .actionSheet)
+        actionPopUpAlert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
             self.presentImageFromCamera(at: tag)
         }))
-        actionPopUp.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
+        actionPopUpAlert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
             self.presentImagePicker(at: tag)
         }))
-        actionPopUp.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
-        self.present((actionPopUp), animated: true, completion: nil)
+        actionPopUpAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present((actionPopUpAlert), animated: true, completion: nil)
     }
     
     func presentImageFromCamera(at tag: Int) {
@@ -185,9 +185,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         picker.dismiss(animated: true, completion: nil)
     }
+    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
+    
     func createImageOfGridView(gridView: PhotosLayoutView) -> UIImage? {
         // Creates a bitmap-based graphics context and makes it the current context.
         UIGraphicsBeginImageContext(gridView.frame.size)

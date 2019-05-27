@@ -26,26 +26,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // Use to change the label "swipe up" to "swipe left" when device is rotated
     @IBOutlet private weak var swipeLabel: UILabel!
     
-    
+    // Use to share the PhotosLayoutView
     @IBOutlet weak var gridView: PhotosLayoutView!
     
     //MARK: Variables
+    
     let imagePicker = UIImagePickerController()
     var index = 0
     
     //MARK: ViewDidLoad
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         imagePicker.delegate = self
         swipeGesture()
+        changeSwipeLabelWithNotification()
     }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        swipeDevice()
-    }
-    
     //MARK: Actions
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
         displaySelectedOverlay(sender)
@@ -61,37 +56,36 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     fileprivate func swipeGesture() {
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(HandleOrientationToShare(_:)))
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(HandleOrientationToShare(_:)))
+        
         swipeLeft.direction = .left
         swipeUp.direction = .up
         gridView.addGestureRecognizer(swipeLeft)
         gridView.addGestureRecognizer(swipeUp)
     }
-    
-    @objc fileprivate func HandleOrientationToShare(_ sender: UISwipeGestureRecognizer) {
-//        let screenWidth = UIScreen.main.bounds.width
-//        let screenHeight = UIScreen.main.bounds.height
+    // Use to change label and arrow when device has been rotated
+    @objc func swipeDevice(deviceOrientation: UIDeviceOrientation) {
         if UIDevice.current.orientation.isLandscape {
-            sender.direction = .left
-            swipeAnimation(translationX: -view.frame.height, y: 0)
-        } else {
-            sender.direction = .up
-            swipeAnimation(translationX: 0, y: -view.frame.width)
+            swipeLabel.text = "Swipe left to share"
+            swipeDirectionArrowImageView.image = UIImage(named: "Swipe Left")
+        } else if UIDevice.current.orientation.isPortrait {
+            swipeLabel.text = "Swipe up to share"
+            swipeDirectionArrowImageView.image = UIImage(named: "Swipe Up")
         }
-        shareImage()
     }
     
-    fileprivate func checkLayoutIsFilled() {
-        //        if gridView.checkIfLayout(layout: .layout1) {
-        //            photosMissingAlert()
-        //        } else if gridView.checkIfLayout(layout: .layout2) {
-        //            photosMissingAlert()
-        //        } else if gridView.checkIfLayout(layout: .layout3) {
-        //            photosMissingAlert()
-        if index < 3 {
-            photosMissingAlert()
+    private func changeSwipeLabelWithNotification() {    // Use device orientation observer with notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(swipeDevice(deviceOrientation:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    @objc fileprivate func HandleOrientationToShare(_ sender: UISwipeGestureRecognizer) {
+        if UIDevice.current.orientation.isLandscape {
+            sender.direction = .left
+            swipeAnimation(translationX: -view.frame.width, y: 0)
         } else {
-            shareImage()
+            sender.direction = .up
+            swipeAnimation(translationX: 0, y: -view.frame.height)
         }
+        shareImage()
     }
     
     private func swipeAnimation(translationX x: CGFloat, y: CGFloat) {
@@ -100,16 +94,32 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         })
     }
     
+    fileprivate func checkLayoutIsFilledBeforeSharing() {
+        if index < 3 {
+            photosMissingAlert()
+        } else {
+            shareImage()
+        }
+    }
+    
+    fileprivate func photosMissingAlert() {
+        let photosMissingAlert = UIAlertController(title: "Missing Pictures", message: "Add photos before sharing", preferredStyle: .alert)
+        photosMissingAlert.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
+        present(photosMissingAlert, animated: true)
+        gridView.transform = .identity
+        return
+    }
+    
     private func shareImage() {
         let image = createImageOfGridView(gridView: gridView)
         let activityViewController = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
-        
-        resetLayout()
+        activityViewController.completionWithItemsHandler = { activity, completed, item, error in
+            self.resetLayout()
+        }
     }
-    
     // use to empty the layout
     func resetLayout() {
         showButtonsOnImages()
@@ -130,14 +140,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             button.alpha = 1
         }
     }
-    
-    fileprivate func photosMissingAlert() {
-        let photosMissingAlert = UIAlertController(title: "Missing Pictures", message: "Add photos before sharing", preferredStyle: .alert)
-        photosMissingAlert.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
-        present(photosMissingAlert, animated: true)
-        gridView.transform = .identity
-        return
-    }
     // Use to show or hide the selected button on the selected layout
     fileprivate func displaySelectedOverlay(_ sender: UIButton) {
         for selectedLayoutImageView in tappedOnSelectedLayoutImageViews {
@@ -157,17 +159,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             default:
                 break
             }
-        }
-    }
-    
-    // Use to change label and arrow when device has been rotated
-    func swipeDevice() {
-        if UIDevice.current.orientation.isLandscape {
-            swipeLabel.text = "Swipe left to share"
-            swipeDirectionArrowImageView.image = UIImage(named: "Swipe Left")
-        } else if UIDevice.current.orientation.isPortrait {
-            swipeLabel.text = "Swipe up to share"
-            swipeDirectionArrowImageView.image = UIImage(named: "Swipe Up")
         }
     }
     // Use to choose between camera or Photo libray with a popup alert

@@ -52,5 +52,7 @@
 	<string>$(PRODUCT_NAME) We need to have access to your photo library </string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Do you want to upload your layout in your library?</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 </dict>
 </plist>

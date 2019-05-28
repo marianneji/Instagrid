@@ -10,8 +10,8 @@ import Foundation
 
 import UIKit
 
-enum Layout: Int {
-    case layout1 = 1, layout2, layout3
+enum Layout {
+    case layout1, layout2, layout3
     
     var photosLayoutNumber: (top: Int, bot: Int) {
         switch self {

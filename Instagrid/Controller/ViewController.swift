@@ -34,12 +34,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     let imagePicker = UIImagePickerController()
     var index = 0
     
+    
     //MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         imagePicker.delegate = self
         swipeGesture()
         changeSwipeLabelWithNotification()
+
     }
     //MARK: Actions
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
@@ -186,11 +188,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.index = tag
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         imagePicker.allowsEditing = true
+        
         self.present(imagePicker, animated: true)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+        if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             imagesArrayImageView[index].image = image
         }
         picker.dismiss(animated: true, completion: nil)

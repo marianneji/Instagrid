@@ -32,21 +32,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //MARK: Variables
     
     let imagePicker = UIImagePickerController()
+    // Use to add images at tag
     var index = 0
-    
+    var selectedLayout: Layout = .layout1
     
     //MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        displaySelectedLayout(at: 1)
         imagePicker.delegate = self
         swipeGesture()
         changeSwipeLabelWithNotification()
-
     }
     //MARK: Actions
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
+        
         displaySelectedOverlay(sender)
-        displaySelectedLayout(sender)
+        displaySelectedLayout(at: sender.tag)
     }
     
     @IBAction func tappedOnImageButton(_ sender: UIButton) {
@@ -87,7 +89,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             sender.direction = .up
             swipeAnimation(translationX: 0, y: -view.frame.height)
         }
-        shareImage()
+        checkLayoutIsFilledBeforeSharing()
     }
     
     private func swipeAnimation(translationX x: CGFloat, y: CGFloat) {
@@ -97,14 +99,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     fileprivate func checkLayoutIsFilledBeforeSharing() {
-        if index < 3 {
-            photosMissingAlert()
-        } else {
-            shareImage()
+        let imageCount = imagesArrayImageView.filter { $0.image != nil }.count
+        switch selectedLayout {
+        case .layout1, .layout2:
+            if imageCount < 3 {
+                photosMissingAlert()
+            } else {
+                shareImage()
+            }
+        case .layout3:
+            if imageCount < 4 {
+                photosMissingAlert()
+            } else {
+                shareImage()
+            }
         }
     }
     
-    fileprivate func photosMissingAlert() {
+     func photosMissingAlert() {
         let photosMissingAlert = UIAlertController(title: "Missing Pictures", message: "Add photos before sharing", preferredStyle: .alert)
         photosMissingAlert.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
         present(photosMissingAlert, animated: true)
@@ -149,15 +161,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     // Use to set up the grid of the selected layout
-    fileprivate func displaySelectedLayout(_ sender: UIButton) {
+    fileprivate func displaySelectedLayout(at tag: Int) {
         for _ in tappedOnSelectedLayoutImageViews.enumerated() {
-            switch sender.tag {
+            switch tag {
             case 1:
                 gridView.setupLayout(Layout.layout1)
+                selectedLayout = .layout1
             case 2:
                 gridView.setupLayout(Layout.layout2)
+                selectedLayout = .layout2
             case 3:
                 gridView.setupLayout(Layout.layout3)
+                selectedLayout = .layout3
             default:
                 break
             }
@@ -165,6 +180,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     // Use to choose between camera or Photo libray with a popup alert
     func chooseSourceTypeForPicture (at tag: Int) {
+        
         self.index = tag
         let actionPopUpAlert = UIAlertController(title: "Photo Source", message: "Choose between", preferredStyle: .actionSheet)
         actionPopUpAlert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
@@ -188,7 +204,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.index = tag
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         imagePicker.allowsEditing = true
-        
         self.present(imagePicker, animated: true)
     }
     

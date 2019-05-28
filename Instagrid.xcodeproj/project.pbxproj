@@ -15,6 +15,7 @@
 		7225AD2F2269C24E00ABAA91 /* Delm-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7225AD2E2269C24E00ABAA91 /* Delm-Medium.otf */; };
 		7225AD312269C28100ABAA91 /* ThirstySoftRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7225AD302269C28100ABAA91 /* ThirstySoftRegular.otf */; };
 		725F1A462285AA980043A087 /* PhotosLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725F1A452285AA980043A087 /* PhotosLayoutView.swift */; };
+		72721EC0229D343800038AB7 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72721EBF229D343700038AB7 /* Photos.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		72FF51DB2271F9300087291C /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FF51DA2271F92F0087291C /* Layout.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		7225AD2E2269C24E00ABAA91 /* Delm-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Delm-Medium.otf"; sourceTree = "<group>"; };
 		7225AD302269C28100ABAA91 /* ThirstySoftRegular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThirstySoftRegular.otf; sourceTree = "<group>"; };
 		725F1A452285AA980043A087 /* PhotosLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosLayoutView.swift; sourceTree = "<group>"; };
+		72721EBF229D343700038AB7 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		72FF51DA2271F92F0087291C /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -37,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72721EC0229D343800038AB7 /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,6 +51,7 @@
 			children = (
 				72138CD922661C060054D597 /* Instagrid */,
 				72138CD822661C060054D597 /* Products */,
+				72721EBE229D343700038AB7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -106,6 +110,14 @@
 				72FF51DA2271F92F0087291C /* Layout.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		72721EBE229D343700038AB7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				72721EBF229D343700038AB7 /* Photos.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

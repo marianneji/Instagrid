@@ -40,13 +40,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         super.viewDidLoad()
         displaySelectedLayout(at: 1)
+        displaySelectedLayoutButton()
         imagePicker.delegate = self
         swipeGesture()
         changeSwipeLabelWithNotification()
     }
     //MARK: Actions
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
-        
         displaySelectedOverlay(sender)
         displaySelectedLayout(at: sender.tag)
     }
@@ -178,6 +178,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
         }
     }
+    func displaySelectedLayoutButton() {
+        for selectedButton in tappedOnSelectedLayoutImageViews {
+            switch selectedButton.tag {
+            case 1:
+                selectedButton.isHidden = false
+            case 2, 3:
+                selectedButton.isHidden = true
+            default:
+                break
+            }
+        }
+    }
+    
     // Use to choose between camera or Photo libray with a popup alert
     func chooseSourceTypeForPicture (at tag: Int) {
         

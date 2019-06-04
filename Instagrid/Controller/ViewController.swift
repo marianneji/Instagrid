@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -215,9 +216,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // call the photo library
     func presentImagePicker(at tag: Int) {
         self.index = tag
+        if checkPermission() {
         imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         imagePicker.allowsEditing = true
         self.present(imagePicker, animated: true)
+        }
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -241,6 +244,36 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         return image
     }
+    // This function check the permission to access the photo library
+    func checkPermission() -> Bool {
+        // By default, we consider we don't have it
+        var status = false
+        // We go catch the current status
+        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+        switch photoAuthorizationStatus {
+        case .authorized:
+            // We do have the autorisation. Everything is good!
+            status = true
+        case .notDetermined:
+            // The user didn't gave the autorisation yet. So we go ask him
+            PHPhotoLibrary.requestAuthorization({
+                (newStatus) in
+                if newStatus ==  PHAuthorizationStatus.authorized {
+                    // the user gave us the permission
+                    status = true
+                }
+            })
+        case .denied, .restricted:
+            // The user denied..
+            break
+        @unknown default:
+            // Unknown case - update for swift 5
+            break
+        }
+        // Value ready to be returned
+        return status
+    }
+
 }
 
 

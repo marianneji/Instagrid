@@ -216,6 +216,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let ac = UIAlertController(title: "No camera Found", message: "try on a real device", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
             present(ac, animated: true)
+            imagesButtons[index].alpha = 1
         }
     }
     // call the photo library

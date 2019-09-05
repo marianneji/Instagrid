@@ -77,8 +77,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             swipeDirectionArrowImageView.image = UIImage(named: "Swipe Up")
         }
     }
-    
-    private func changeSwipeLabelWithNotification() {    // Use device orientation observer with notifications
+    // Use device orientation observer with notifications
+    private func changeSwipeLabelWithNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(swipeDevice(deviceOrientation:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
@@ -209,9 +209,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // call the camera
     func presentImageFromCamera(at tag: Int) {
         self.index = tag
-        imagePicker.sourceType = UIImagePickerController.SourceType.camera
+        if imagePicker.sourceType == UIImagePickerController.SourceType.camera {
         imagePicker.allowsEditing = true
         self.present(imagePicker, animated: true)
+        } else {
+            let ac = UIAlertController(title: "No camera Found", message: "try on a real device", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+            present(ac, animated: true)
+        }
     }
     // call the photo library
     func presentImagePicker(at tag: Int) {

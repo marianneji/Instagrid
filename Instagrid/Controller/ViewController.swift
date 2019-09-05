@@ -147,7 +147,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     fileprivate func hideButtonsOnImages(_ sender: UIButton) {
         let button = imagesButtons[index]
-        button.alpha = 0.1
+        button.alpha = 0.01
     }
     
     fileprivate func showButtonsOnImages() {
@@ -209,9 +209,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // call the camera
     func presentImageFromCamera(at tag: Int) {
         self.index = tag
-        if imagePicker.sourceType == UIImagePickerController.SourceType.camera {
-        imagePicker.allowsEditing = true
-        self.present(imagePicker, animated: true)
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            imagePicker.sourceType = .camera
+            imagePicker.allowsEditing = true
+            self.present(imagePicker, animated: true, completion: nil)
         } else {
             let ac = UIAlertController(title: "No camera Found", message: "try on a real device", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
@@ -279,7 +280,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Value ready to be returned
         return status
     }
+}
 
+extension UIImagePickerController {
+    open override var shouldAutorotate: Bool { return true }
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask { return .all }
 }
 
 

@@ -9,16 +9,10 @@
 import UIKit
 
 class GridView: UIView {
-
-
     // Contain the top stackView in the GridView
     @IBOutlet weak var topStackView: UIStackView!
-    
     // Contain the bottom stackView in the GridView
     @IBOutlet weak var bottomStackView: UIStackView!
-    
     // Contain all the dispositions of the grid View buttons
     @IBOutlet var plusButtons: [UIButton]!
-    
-    
 }

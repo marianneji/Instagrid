@@ -12,7 +12,6 @@ import UIKit
 
 enum Layout {
     case layout1, layout2, layout3
-    
     var photosLayoutNumber: (top: Int, bot: Int) {
         switch self {
         case .layout1:

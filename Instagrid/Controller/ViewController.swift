@@ -11,7 +11,7 @@ import Photos
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    //MARK: Outlets
+    // MARK: Outlets
     //Use to hide the button on the image
     @IBOutlet var imagesButtons: [UIButton]!
     
@@ -19,7 +19,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet var imagesArrayImageView: [UIImageView]!
     
     // Use to set "SelectedButton" image to the corresponding disposition
-    @IBOutlet private var tappedOnSelectedLayoutImageViews: [UIImageView]!
+    @IBOutlet private var selectedLayoutImageViews: [UIImageView]!
     
     // Use to change the image "upArrow" to "leftArrow" when device is rotated
     @IBOutlet private weak var swipeDirectionArrowImageView: UIImageView!
@@ -30,23 +30,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // Use to share the PhotosLayoutView
     @IBOutlet weak var gridView: PhotosLayoutView!
     
-    //MARK: Variables
-    
+    // MARK: Variables
     let imagePicker = UIImagePickerController()
     // Use to add images at tag
     var index = 0
     var selectedLayout: Layout = .layout1
     
-    //MARK: ViewDidLoad
+    // MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        displaySelectedLayout(at: 1)
-        displaySelectedLayoutButton()
+        displaySelectedLayout(at: 3)
         imagePicker.delegate = self
         swipeGesture()
         changeSwipeLabelWithNotification()
     }
-    //MARK: Actions
+    // MARK: Actions
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
         displaySelectedOverlay(sender)
         displaySelectedLayout(at: sender.tag)
@@ -57,10 +55,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         hideButtonsOnImages(sender)
     }
     
-    //Mark: Swipe
+    // MARK: Swipe
     fileprivate func swipeGesture() {
-        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(HandleOrientationToShare(_:)))
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(HandleOrientationToShare(_:)))
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleOrientationToShare(_:)))
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleOrientationToShare(_:)))
         
         swipeLeft.direction = .left
         swipeUp.direction = .up
@@ -82,7 +80,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NotificationCenter.default.addObserver(self, selector: #selector(swipeDevice(deviceOrientation:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
-    @objc fileprivate func HandleOrientationToShare(_ sender: UISwipeGestureRecognizer) {
+    @objc fileprivate func handleOrientationToShare(_ sender: UISwipeGestureRecognizer) {
         if UIDevice.current.orientation.isLandscape {
             sender.direction = .left
             swipeAnimation(translationX: -view.frame.width, y: 0)
@@ -98,7 +96,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             self.gridView.transform = CGAffineTransform(translationX: x, y: y)
         })
     }
-    
+    // MARK: Checks
     fileprivate func checkLayoutIsFilledBeforeSharing() {
         let imageCount = imagesArrayImageView.filter { $0.image != nil }.count
         switch selectedLayout {
@@ -116,38 +114,76 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
         }
     }
-    
-     func photosMissingAlert() {
-        let photosMissingAlert = UIAlertController(title: "Missing Pictures", message: "Add photos before sharing", preferredStyle: .alert)
-        photosMissingAlert.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
-        present(photosMissingAlert, animated: true)
+    // This function check the permission to access the photo library
+    func checkPermission() -> Bool {
+        var status = false // By default, we consider we don't have it, We go catch the current status
+        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+        switch photoAuthorizationStatus {
+        case .authorized: // We do have the autorisation. Everything is good!
+            status = true
+        case .notDetermined: // The user didn't gave the autorisation yet. So we go ask him
+            PHPhotoLibrary.requestAuthorization({ (newStatus) in
+                if newStatus ==  PHAuthorizationStatus.authorized { // the user gave us the permission
+                    status = true
+                }
+            })
+        case .denied, .restricted: // The user denied..
+            break
+        @unknown default: // Unknown case - update for swift 5
+            break
+        }
+        return status // Value ready to be returned
+    }
+    // MARK: Alerts
+    func photosMissingAlert() {
+        let pMA = UIAlertController(title: "Missing Pictures", message: nil, preferredStyle: .alert)
+        pMA.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
+        present(pMA, animated: true)
         gridView.transform = .identity
         return
+    }
+    // Use to choose between camera or Photo library with a popup alert
+    func chooseSourceTypeForPicture (at tag: Int) {
+        index = tag
+        let ac = UIAlertController(title: "Photo Source", message: "Choose between", preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+            self.presentImageFromCamera(at: tag)
+        }))
+        ac.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
+            self.presentImagePicker(at: tag)
+        }))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+            self.showPlusButton(at: tag)
+        }))
+        present((ac), animated: true, completion: nil)
     }
     
     private func shareImage() {
         let image = createImageOfGridView(gridView: gridView)
         let activityViewController = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-        // present the view controller
-        self.present(activityViewController, animated: true, completion: nil)
+        present(activityViewController, animated: true, completion: nil)
         activityViewController.completionWithItemsHandler = { activity, completed, item, error in
             self.resetLayout()
         }
     }
-    // use to empty the layout
-    func resetLayout() {
+    // MARK: Reset and Buttons
+    func showPlusButton(at tag: Int) {
+        if imagesArrayImageView[index].image == nil {
+            imagesButtons[tag].alpha = 1
+        }
+    }
+    
+    func resetLayout() { // use to empty the Grid
         showButtonsOnImages()
         for image in imagesArrayImageView {
             image.image = nil
         }
         gridView.transform = .identity
-        index = 0
     }
     
     fileprivate func hideButtonsOnImages(_ sender: UIButton) {
         let button = imagesButtons[index]
-        button.alpha = 0.01
+        button.alpha = 0.02
     }
     
     fileprivate func showButtonsOnImages() {
@@ -157,80 +193,58 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     // Use to show or hide the selected button on the selected layout
     fileprivate func displaySelectedOverlay(_ sender: UIButton) {
-        for selectedLayoutImageView in tappedOnSelectedLayoutImageViews {
+        for selectedLayoutImageView in selectedLayoutImageViews {
             selectedLayoutImageView.isHidden = selectedLayoutImageView.tag != sender.tag
         }
     }
     // Use to set up the grid of the selected layout
     fileprivate func displaySelectedLayout(at tag: Int) {
-        for _ in tappedOnSelectedLayoutImageViews.enumerated() {
+        for _ in selectedLayoutImageViews.enumerated() {
             switch tag {
             case 1:
                 gridView.setupLayout(Layout.layout1)
                 selectedLayout = .layout1
+                selectedLayoutImageViews[0].isHidden = false
             case 2:
                 gridView.setupLayout(Layout.layout2)
                 selectedLayout = .layout2
+                selectedLayoutImageViews[1].isHidden = false
+
             case 3:
                 gridView.setupLayout(Layout.layout3)
                 selectedLayout = .layout3
+                selectedLayoutImageViews[2].isHidden = false
+
             default:
                 break
             }
         }
     }
-    func displaySelectedLayoutButton() {
-        for selectedButton in tappedOnSelectedLayoutImageViews {
-            switch selectedButton.tag {
-            case 1:
-                selectedButton.isHidden = false
-            case 2, 3:
-                selectedButton.isHidden = true
-            default:
-                break
-            }
-        }
-    }
-    
-    // Use to choose between camera or Photo libray with a popup alert
-    func chooseSourceTypeForPicture (at tag: Int) {
-        
-        self.index = tag
-        let actionPopUpAlert = UIAlertController(title: "Photo Source", message: "Choose between", preferredStyle: .actionSheet)
-        actionPopUpAlert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
-            self.presentImageFromCamera(at: tag)
-        }))
-        actionPopUpAlert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
-            self.presentImagePicker(at: tag)
-        }))
-        actionPopUpAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        self.present((actionPopUpAlert), animated: true, completion: nil)
-    }
-    // call the camera
-    func presentImageFromCamera(at tag: Int) {
-        self.index = tag
+    // MARK: Picture
+    func presentImageFromCamera(at tag: Int) { // call the camera
+        index = tag
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             imagePicker.sourceType = .camera
             imagePicker.allowsEditing = true
-            self.present(imagePicker, animated: true, completion: nil)
+            present(imagePicker, animated: true, completion: nil)
         } else {
             let ac = UIAlertController(title: "No camera Found", message: "try on a real device", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
             present(ac, animated: true)
-            imagesButtons[index].alpha = 1
-        }
-    }
-    // call the photo library
-    func presentImagePicker(at tag: Int) {
-        self.index = tag
-        if checkPermission() {
-        imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
-        imagePicker.allowsEditing = true
-        self.present(imagePicker, animated: true)
+            showPlusButton(at: tag)
         }
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func presentImagePicker(at tag: Int) { // call the photo library
+        index = tag
+        if checkPermission() {
+            imagePicker.sourceType = .photoLibrary
+            imagePicker.allowsEditing = true
+            present(imagePicker, animated: true)
+        }
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             imagesArrayImageView[index].image = image
         }
@@ -239,46 +253,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+        showPlusButton(at: index)
     }
     
     func createImageOfGridView(gridView: PhotosLayoutView) -> UIImage? {
-        // Creates a bitmap-based graphics context and makes it the current context.
-        UIGraphicsBeginImageContext(gridView.frame.size)
-        // Renders the layer and its sublayers into the specified context.
-        gridView.layer.render(in: UIGraphicsGetCurrentContext()!)
-        // Returns an image based on the contents of the current bitmap-based graphics context.
-        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
+        UIGraphicsBeginImageContext(gridView.frame.size)// Creates a bitmap-based graphics context and makes it the current context.
+        gridView.layer.render(in: UIGraphicsGetCurrentContext()!) // Renders the layer and its sublayers into the specified context.
+        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() } // Returns an image based on the contents of the current bitmap-based graphics context.
         
         return image
-    }
-    // This function check the permission to access the photo library
-    func checkPermission() -> Bool {
-        // By default, we consider we don't have it
-        var status = false
-        // We go catch the current status
-        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
-        switch photoAuthorizationStatus {
-        case .authorized:
-            // We do have the autorisation. Everything is good!
-            status = true
-        case .notDetermined:
-            // The user didn't gave the autorisation yet. So we go ask him
-            PHPhotoLibrary.requestAuthorization({
-                (newStatus) in
-                if newStatus ==  PHAuthorizationStatus.authorized {
-                    // the user gave us the permission
-                    status = true
-                }
-            })
-        case .denied, .restricted:
-            // The user denied..
-            break
-        @unknown default:
-            // Unknown case - update for swift 5
-            break
-        }
-        // Value ready to be returned
-        return status
     }
 }
 
@@ -286,5 +269,3 @@ extension UIImagePickerController {
     open override var shouldAutorotate: Bool { return true }
     open override var supportedInterfaceOrientations: UIInterfaceOrientationMask { return .all }
 }
-
-

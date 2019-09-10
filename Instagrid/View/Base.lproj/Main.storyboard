@@ -114,7 +114,7 @@
                                                     <view tag="1" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="rNx-cg-8UL" userLabel="View Bottom Left">
                                                         <rect key="frame" x="0.0" y="0.0" width="155" height="155"/>
                                                         <subviews>
-                                                            <imageView autoresizesSubviews="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="giv-Ig-rH8" userLabel="Bottom Left Image View">
+                                                            <imageView autoresizesSubviews="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="giv-Ig-rH8" userLabel="Bottom Left Image View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="155" height="155"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             </imageView>

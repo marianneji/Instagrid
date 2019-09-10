@@ -115,26 +115,33 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     // This function check the permission to access the photo library
-    func checkPermission() -> Bool {
-        var status = false // By default, we consider we don't have it, We go catch the current status
+    func checkPermission() {
         let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
         switch photoAuthorizationStatus {
+        case .denied, .restricted:
+            accessDeniedAlert()
         case .authorized: // We do have the autorisation. Everything is good!
-            status = true
+            presentImagePicker(at: index)
         case .notDetermined: // The user didn't gave the autorisation yet. So we go ask him
             PHPhotoLibrary.requestAuthorization({ (newStatus) in
                 if newStatus ==  PHAuthorizationStatus.authorized { // the user gave us the permission
-                    status = true
+                } else if newStatus == PHAuthorizationStatus.denied {
+                    self.accessDeniedAlert()
                 }
             })
-        case .denied, .restricted: // The user denied..
-            break
         @unknown default: // Unknown case - update for swift 5
             break
         }
-        return status // Value ready to be returned
     }
     // MARK: Alerts
+    fileprivate func accessDeniedAlert() {
+        // The user denied..
+        let aCDenied = UIAlertController(title: "Acces Denied", message: "Go to settings and change it", preferredStyle: .alert)
+        aCDenied.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { _ in
+            self.showPlusButton(at: self.index)
+        }))
+        self.present(aCDenied, animated: true)
+    }
     func photosMissingAlert() {
         let pMA = UIAlertController(title: "Missing Pictures", message: nil, preferredStyle: .alert)
         pMA.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
@@ -150,7 +157,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             self.presentImageFromCamera(at: tag)
         }))
         ac.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
-            self.presentImagePicker(at: tag)
+            self.checkPermission()
         }))
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             self.showPlusButton(at: tag)
@@ -237,11 +244,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func presentImagePicker(at tag: Int) { // call the photo library
         index = tag
-        if checkPermission() {
-            imagePicker.sourceType = .photoLibrary
-            imagePicker.allowsEditing = true
-            present(imagePicker, animated: true)
-        }
+        
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.allowsEditing = true
+        present(imagePicker, animated: true)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {

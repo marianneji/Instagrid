@@ -9,12 +9,12 @@
 import UIKit
 
 class PhotosLayoutView: UIView {
-    
+
     @IBOutlet weak var topLeftView: UIView?
     @IBOutlet weak var topRightView: UIView?
     @IBOutlet weak var bottomLeftView: UIView?
     @IBOutlet weak var bottomRightView: UIView?
-    
+
     func setupLayout(_ layout: Layout) {
         self.topLeftView?.isHidden = false
         self.topRightView?.isHidden = layout.photosLayoutNumber.top == 1

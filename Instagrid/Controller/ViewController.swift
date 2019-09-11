@@ -10,32 +10,32 @@ import UIKit
 import Photos
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
+
     // MARK: Outlets
     //Use to hide the button on the image
     @IBOutlet var imagesButtons: [UIButton]!
-    
+
     //Use to store pictures in an array
     @IBOutlet var imagesArrayImageView: [UIImageView]!
-    
+
     // Use to set "SelectedButton" image to the corresponding disposition
     @IBOutlet private var selectedLayoutImageViews: [UIImageView]!
-    
+
     // Use to change the image "upArrow" to "leftArrow" when device is rotated
     @IBOutlet private weak var swipeDirectionArrowImageView: UIImageView!
-    
+
     // Use to change the label "swipe up" to "swipe left" when device is rotated
     @IBOutlet private weak var swipeLabel: UILabel!
-    
+
     // Use to share the PhotosLayoutView
     @IBOutlet weak var gridView: PhotosLayoutView!
-    
+
     // MARK: Variables
     let imagePicker = UIImagePickerController()
     // Use to add images at tag
     var index = 0
     var selectedLayout: Layout = .layout1
-    
+
     // MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,22 +44,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         swipeGesture()
         changeSwipeLabelWithNotification()
     }
+
     // MARK: Actions
     @IBAction func layoutButtonTapped(_ sender: UIButton) {
         displaySelectedOverlay(sender)
         displaySelectedLayout(at: sender.tag)
     }
-    
+
     @IBAction func tappedOnImageButton(_ sender: UIButton) {
         chooseSourceTypeForPicture(at: sender.tag)
         hideButtonsOnImages(sender)
     }
-    
+
     // MARK: Swipe
     fileprivate func swipeGesture() {
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleOrientationToShare(_:)))
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleOrientationToShare(_:)))
-        
+
         swipeLeft.direction = .left
         swipeUp.direction = .up
         gridView.addGestureRecognizer(swipeLeft)
@@ -77,9 +78,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     // Use device orientation observer with notifications
     private func changeSwipeLabelWithNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(swipeDevice(deviceOrientation:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(swipeDevice(deviceOrientation:)),
+                                               name: UIDevice.orientationDidChangeNotification,
+                                               object: nil)
     }
-    
+
     @objc fileprivate func handleOrientationToShare(_ sender: UISwipeGestureRecognizer) {
         if UIDevice.current.orientation.isLandscape {
             sender.direction = .left
@@ -90,15 +94,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         checkLayoutIsFilledBeforeSharing()
     }
-    
+    // swiftlint:disable identifier_name
     private func swipeAnimation(translationX x: CGFloat, y: CGFloat) {
         UIView.animate(withDuration: 0.7, animations: {
             self.gridView.transform = CGAffineTransform(translationX: x, y: y)
         })
     }
+
     // MARK: Checks
     fileprivate func checkLayoutIsFilledBeforeSharing() {
+
         let imageCount = imagesArrayImageView.filter { $0.image != nil }.count
+
         switch selectedLayout {
         case .layout1, .layout2:
             if imageCount < 3 {
@@ -133,38 +140,47 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             break
         }
     }
-    // MARK: Alerts
+
+    // MARK: Alerts/ActionSheets
     fileprivate func accessDeniedAlert() {
         // The user denied..
-        let aCDenied = UIAlertController(title: "Acces Denied", message: "Go to settings and change it", preferredStyle: .alert)
-        aCDenied.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { _ in
+        let acDenied = UIAlertController(title: "Access Denied",
+                                         message: "Go to settings and change it",
+                                         preferredStyle: .alert)
+        acDenied.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { _ in
             self.showPlusButton(at: self.index)
         }))
-        self.present(aCDenied, animated: true)
+        self.present(acDenied, animated: true)
     }
+
     func photosMissingAlert() {
-        let pMA = UIAlertController(title: "Missing Pictures", message: nil, preferredStyle: .alert)
+        let pMA = UIAlertController(title: "Missing Pictures",
+                                    message: nil,
+                                    preferredStyle: .alert)
         pMA.addAction(UIAlertAction(title: "Add Photos", style: .default, handler: nil))
         present(pMA, animated: true)
         gridView.transform = .identity
         return
     }
+
     // Use to choose between camera or Photo library with a popup alert
     func chooseSourceTypeForPicture (at tag: Int) {
         index = tag
-        let ac = UIAlertController(title: "Photo Source", message: "Choose between", preferredStyle: .actionSheet)
-        ac.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+        let asSourceType = UIAlertController(title: "Photo Source",
+                                                message: "Choose between",
+                                                preferredStyle: .actionSheet)
+        asSourceType.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
             self.presentImageFromCamera(at: tag)
         }))
-        ac.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
+        asSourceType.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
             self.checkPermission()
         }))
-        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+        asSourceType.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             self.showPlusButton(at: tag)
         }))
-        present((ac), animated: true, completion: nil)
+        present(asSourceType, animated: true, completion: nil)
     }
-    
+
     private func shareImage() {
         let image = createImageOfGridView(gridView: gridView)
         let activityViewController = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
@@ -179,7 +195,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imagesButtons[tag].alpha = 1
         }
     }
-    
+
     func resetLayout() { // use to empty the Grid
         showButtonsOnImages()
         for image in imagesArrayImageView {
@@ -187,12 +203,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         gridView.transform = .identity
     }
-    
+
     fileprivate func hideButtonsOnImages(_ sender: UIButton) {
         let button = imagesButtons[index]
         button.alpha = 0.02
     }
-    
+
     fileprivate func showButtonsOnImages() {
         for button in imagesButtons {
             button.alpha = 1
@@ -235,38 +251,42 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imagePicker.allowsEditing = true
             present(imagePicker, animated: true, completion: nil)
         } else {
-            let ac = UIAlertController(title: "No camera Found", message: "try on a real device", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-            present(ac, animated: true)
+            let alertNoCamera = UIAlertController(title: "No camera Found",
+                                                  message: "try on a real device",
+                                                  preferredStyle: .alert)
+            alertNoCamera.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+            present(alertNoCamera, animated: true)
             showPlusButton(at: tag)
         }
     }
-    
+
     func presentImagePicker(at tag: Int) { // call the photo library
         index = tag
-        
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
         present(imagePicker, animated: true)
     }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             imagesArrayImageView[index].image = image
         }
         picker.dismiss(animated: true, completion: nil)
     }
-    
+
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
         showPlusButton(at: index)
     }
-    
+
     func createImageOfGridView(gridView: PhotosLayoutView) -> UIImage? {
-        UIGraphicsBeginImageContext(gridView.frame.size)// Creates a bitmap-based graphics context and makes it the current context.
-        gridView.layer.render(in: UIGraphicsGetCurrentContext()!) // Renders the layer and its sublayers into the specified context.
-        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() } // Returns an image based on the contents of the current bitmap-based graphics context.
-        
+        // Creates a bitmap-based graphics context and makes it the current context.
+        UIGraphicsBeginImageContext(gridView.frame.size)
+        // Renders the layer and its sublayers into the specified context.
+        gridView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        // Returns an image based on the contents of the current bitmap-based graphics context.
+        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
         return image
     }
 }

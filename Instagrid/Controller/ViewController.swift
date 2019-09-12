@@ -94,7 +94,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         checkLayoutIsFilledBeforeSharing()
     }
-    // swiftlint:disable identifier_name
+    // swiftlint:disable:next identifier_name
     private func swipeAnimation(translationX x: CGFloat, y: CGFloat) {
         UIView.animate(withDuration: 0.7, animations: {
             self.gridView.transform = CGAffineTransform(translationX: x, y: y)
@@ -122,9 +122,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     // This function check the permission to access the photo library
-    func checkPermission() {
-        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
-        switch photoAuthorizationStatus {
+    // swiftlint:disable:next cyclomatic_complexity
+    func checkPermission(for sourceType: UIImagePickerController.SourceType) {
+        if sourceType == .photoLibrary {
+        let status = PHPhotoLibrary.authorizationStatus()
+        switch status {
         case .denied, .restricted:
             accessDeniedAlert()
         case .authorized: // We do have the autorisation. Everything is good!
@@ -139,6 +141,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             })
         @unknown default: // Unknown case - update for swift 5
             break
+            }
+        } else if sourceType == .camera {
+            let status = AVCaptureDevice.authorizationStatus(for: .video)
+            switch status {
+            case .denied, .restricted:
+                accessDeniedAlert()
+            case .authorized: // We do have the autorisation. Everything is good!
+                presentImageFromCamera(at: index)
+            case .notDetermined: // The user didn't gave the autorisation yet. So we go ask him
+                AVCaptureDevice.requestAccess(for: .video) { granted in
+                    if granted {
+                        self.presentImageFromCamera(at: self.index)
+                    } else {
+                        self.accessDeniedAlert()
+                    }
+                }
+            @unknown default: // Unknown case - update for swift 5
+                break
+            }
         }
     }
 
@@ -171,10 +192,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                                                 message: "Choose between",
                                                 preferredStyle: .actionSheet)
         asSourceType.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
-            self.presentImageFromCamera(at: tag)
+            self.checkPermission(for: .camera)
         }))
         asSourceType.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
-            self.checkPermission()
+            self.checkPermission(for: .photoLibrary)
         }))
         asSourceType.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             self.showPlusButton(at: tag)

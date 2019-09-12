@@ -132,6 +132,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case .notDetermined: // The user didn't gave the autorisation yet. So we go ask him
             PHPhotoLibrary.requestAuthorization({ (newStatus) in
                 if newStatus ==  PHAuthorizationStatus.authorized { // the user gave us the permission
+                    self.presentImagePicker(at: self.index)
                 } else if newStatus == PHAuthorizationStatus.denied {
                     self.accessDeniedAlert()
                 }

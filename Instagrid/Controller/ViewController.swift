@@ -40,7 +40,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         super.viewDidLoad()
         displaySelectedLayout(at: 3)
-        imagePicker.delegate = self
         swipeGesture()
         changeSwipeLabelWithNotification()
     }
@@ -130,11 +129,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case .denied, .restricted:
             accessDeniedAlert()
         case .authorized: // We do have the autorisation. Everything is good!
-            presentImagePicker(at: index)
+            openPhotoLibrary(at: index)
         case .notDetermined: // The user didn't gave the autorisation yet. So we go ask him
             PHPhotoLibrary.requestAuthorization({ (newStatus) in
                 if newStatus ==  PHAuthorizationStatus.authorized { // the user gave us the permission
-                    self.presentImagePicker(at: self.index)
+                    self.openPhotoLibrary(at: self.index)
                 } else if newStatus == PHAuthorizationStatus.denied {
                     self.accessDeniedAlert()
                 }
@@ -148,11 +147,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             case .denied, .restricted:
                 accessDeniedAlert()
             case .authorized: // We do have the autorisation. Everything is good!
-                presentImageFromCamera(at: index)
+                openCamera(at: index)
             case .notDetermined: // The user didn't gave the autorisation yet. So we go ask him
                 AVCaptureDevice.requestAccess(for: .video) { granted in
                     if granted {
-                        self.presentImageFromCamera(at: self.index)
+                        self.openCamera(at: self.index)
                     } else {
                         self.accessDeniedAlert()
                     }
@@ -266,9 +265,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     // MARK: Picture
-    func presentImageFromCamera(at tag: Int) { // call the camera
+    func openCamera(at tag: Int) { // call the camera
         index = tag
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            imagePicker.delegate = self
             imagePicker.sourceType = .camera
             imagePicker.allowsEditing = true
             present(imagePicker, animated: true, completion: nil)
@@ -282,8 +282,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
 
-    func presentImagePicker(at tag: Int) { // call the photo library
+    func openPhotoLibrary(at tag: Int) { // call the photo library
         index = tag
+        imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
         present(imagePicker, animated: true)
